@@ -1,0 +1,149 @@
+---3.
+describe salgrade;
+---4.
+select empno, ename, job from emp;
+---6.
+select dname, loc from dept;
+---8.
+select distinct hiredate from emp;
+---11.
+select ename, sal*6 from emp;
+---12.
+select ename, comm*6 from emp;
+---13.
+select ename as "NAME", sal as "SALARY" from emp;
+---14.
+select empno as 사원번호, ename as 사원이름, hiredate as 입사일, deptno as 부서번호 from emp;
+---16.
+select job || ename from emp;
+---17.
+select hiredate ||'에 입사한 ' ||ename||'입니다' from emp;
+---19.
+select empno, ename from emp where sal >=2000;
+---21.
+select ename from emp where hiredate = '1980-12-17';
+---22.
+select dname, loc from dept where deptno <>30;
+--23. 
+select hisal, losal from salgrade where grade = 5;
+--25.
+select ename, job, deptno from emp where deptno=10 and job='MANAGER';
+--------------------------------
+--------------------------------
+--------------------------------
+--2.
+DESC subject;
+--4.
+select * from enrol;
+--6. 
+desc student;
+select stu_dept, stu_class from student;
+--8.
+select * from student;
+--10. 
+select sub_name, sub_prof from subject;
+--12. 
+select stu_height, stu_weight, stu_no, stu_name from student;
+--14.
+select distinct(stu_gender) from student;
+--16.
+describe student;
+select distinct stu_dept, stu_grade from student;
+--18.
+select stu_weight+5 from student;
+--20.
+select stu_no as 학번, stu_name as 이름 from student;
+--22.
+describe subject;
+select sub_name as 과목이름, sub_prof as 교수명 from subject;
+--24.
+select stu_dept ||' '|| stu_name||'입니다.' from student;
+--26.
+select * from student where stu_dept = '기계';
+--28.
+select * from student where stu_height > 170;
+--30.
+select stu_no, stu_name from student where stu_dept = '기계';
+--32.
+select stu_no, stu_name from student where stu_dept = '전기전자';
+--34.
+select stu_name from student where stu_gender = 'F';
+--36.
+select * from student where stu_dept <> '기계';
+--38.
+select * from student where stu_name = '김인중';
+--40.
+select * from student where stu_dept = '기계' and stu_grade = 2;
+--42.
+select stu_name from student where stu_dept <>'컴퓨터정보' and stu_grade = 1;
+--44. 
+select stu_name from student where stu_grade = 2 and stu_class = 'A';
+--46. 
+select stu_no, stu_name, stu_dept from student where stu_no like '2013%';
+--48. 
+select stu_no, stu_name from student where stu_name like '김%';
+--50.
+select * from student where stu_no like '2006%';
+--52.
+SELECT STU_NAME FROM STUDENT WHERE stu_height is null;
+--54.
+select stu_no, stu_name from student where stu_dept IN ('컴퓨터정보', '기계');
+--56.
+select stu_no, stu_name from student order by stu_no;
+--58.
+select stu_no, stu_name , stu_dept from student order by stu_dept ;
+--60.
+select * from student order by stu_class;
+--62.
+select Lower(stu_gender) from student;
+--64.
+select stu_dept|| stu_name from student;
+--66.
+select stu_dept||'과 '||stu_grade||'학년 '||stu_name||'입니다' from student;
+--68.
+select stu_name, LENGTH (stu_name) from student;
+--70.
+select INSTR(stu_name, '김')from student;
+--72.
+select LPAD(stu_name, 15, '&') from student;
+--74.
+select stu_no, stu_name, round(stu_height,1) from student;
+--76.
+select MOD(stu_height,30) from student;
+--78.
+select stu_no, stu_name, TRUNC(stu_height,2) from student;
+--80.
+select NVL(to_char(stu_height),'입력요망'), stu_no, stu_name from student;
+--82.
+select nvl(nullif(stu_gender, 'M'), '남자') from student;
+--84.
+select stu_no, stu_name, stu_gender, stu_weight, 
+decode (Stu_gender, 'F', stu_weight+5,
+                    'M', stu_weight-5,
+                    stu_weight) as 변경된몸무게
+                    from student;
+--86.
+select min(stu_height) from student;
+--88.
+select max(stu_name), min(Stu_name) from student;
+--90.
+select max(stu_no), min(Stu_no) from student;
+--92.
+select count(distinct(substr(stu_name, 1,1))) from student;
+--94.
+select count(*) from enrol;
+--96.
+select stu_dept, count(*) from student group by stu_Dept order by count(*) desc;
+--98.
+select stu_grade, count(*) from student group by stu_grade order by count(*) desc;
+--100.
+select stddev(stu_height) from student;
+--102.
+select avg(stu_height) from student group by stu_grade, stu_dept;
+--104.
+select count(*) from student group by stu_dept order by count(*);
+--106.
+select avg(stu_weight) from student group by stu_dept, stu_grade order by avg(stu_weight);
+--108.
+select stu_dept, avg(stu_height) from student group by stu_dept having avg(stu_height)>=170 order by avg(stu_height) desc;
+
