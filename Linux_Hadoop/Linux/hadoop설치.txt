@@ -152,7 +152,7 @@ tar xzvfp (하둡 집파일)
 ln -s (hadoop-1.0.4) hadoop
 
 다시 namenode에서
-hadoop namenode format  #하둡을 namenode에서 실행한다
+hadoop namenode -format  #하둡을 namenode에서 실행한다
 start-all.sh 
 	(이걸로 하면 namenode와 snamenode 둘다 실행하므로 
 	만일 yes/no를 물어본다면 아마도 snamenode connection 때문일 것. yes로 선택)
