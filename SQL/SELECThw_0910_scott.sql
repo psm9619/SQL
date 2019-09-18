@@ -31,7 +31,7 @@
 --drop table enrol;
 --
 --
---insert into student values(20152075, '옥한빛', '기계', 1, 'C', 'M', 177, 80);
+--insert into student values(20153075, '옥한빛', '기계', 1, 'C', 'M', 177, 80);
 --insert into student values(20153088, '이태연', '기계', 1, 'C', 'F', 162, 50);
 --insert into student values(20143054, '유가인', '기계', 2, 'C', 'F', 154, 47);
 --insert into student values(20152088, '조민우', '전기전자', 1, 'C', 'M', 188, 90);
@@ -41,7 +41,7 @@
 --insert into student values(20141007, '진현무', '컴퓨터정보', 2, 'A', 'M', 174, 64);
 --insert into student values(20131001, '김종헌', '컴퓨터정보', 3, 'C', 'M', null, 72);
 --insert into student values(20131025, '옥성우', '컴퓨터정보', 3, 'A', 'F', 172, 63);
---
+
 --insert into subject values('111', '데이터베이스', '이재영', 2, '컴퓨터정보');
 --insert into subject values('110', '자동제어', '정순정', 2, '전기전자');
 --insert into subject values('109', '자동화설계', '박민영', 3, '기계');

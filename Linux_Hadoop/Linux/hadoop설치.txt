@@ -1,0 +1,178 @@
+ifconfig -> 여기서 나오는 IP address들을 다음과 같이 저장한다.
+192.168.111.128 namenode
+192.168.111.129 snamenode
+
+--------------------------
+vi /etc/hosts
+	192.168.111.128 namenode
+	192.168.111.129 snamenode
+wq!
+
+vi /etc/sysconfig/network
+	HOSTNAME = namenode 또는 snamenode (서버에 따라)
+wq!
+
+init 6
+
+----------------------
+<hadoop>
+loc
+hostname
+mkdir -p /home/hadoop/hdfs/temp
+mkdir -p /home/hadoop/hdfs/data
+mkdir -p /home/hadoop/hdfs/name
+
+cd
+pwd
+ssh-keygen -t rsa
+	엔터를 3번 치기
+cd .ssh
+ls
+cat id_rsa.pub 	# 엄청 길고 복잡한 글자들...==root#snamenode -> 보안 키를 생성한것
+
+(namenode서버에서)
+cat id_rsa.pub>>authorized_keys  # 현 서버의 id_rsa.pub을 authorized_keys라는 새로운 변수에 저장한것.
+ls	# 새롭게 생성된 파일 확인
+
+ssh root@snamenode cat ~/.ssh/id_rsa.pub>>~/.ssh/authorized_keys
+	yes
+	snamenode 패스워드 입력
+cat authorized_keys	# 확인해보면 root@namenode 키와 root@snamenode 키가 둘 다 저장된 것을 볼 수 있다.
+
+scp -rp authorized_keys root@snamenode:~/.ssh/authorized_keys  # 현 서버의 authorized_keys를 snamenode의 /.ssh/authorized_keys에도 넣어라(카피랑 비슷함)
+	snamenode 패스워드
+
+snamenode로 가서 .ssh 폴더에서 
+	ls  # authorized_keys가 잘 저장되었는지 확인
+이제 namenode와 snamenode 두 서버는 왕래가 가능하다.
+namenode 에서 다른 서버(snamenode)를 불러 사용하는 코맨드
+	ssh snamenode (snanme에서 name을 부를 때는 ssh namenode)
+namenode에서 
+	ssh snamenode date  # snamenode의 날짜를 리턴
+또는 이미 위에서처럼 상대노드 자체를 불러왔다면 단순히
+	date
+이렇게 상대 노드를 불러왔다가 다시 나갈 때(원 노드로 돌아올 때)는
+	exit
+----
+vi ~/.bashrc
+	alias ips='ifconfig eth0 192.168.111.128 up'   #여기서 ip주소는 위에서 node설정에 들어간 ip주소이다. 이렇게 해서 hadoop 저장및 실행시 우리가 지정한 ip에서 실행이 되도록 고정할 수 있다.
+	alias sps='service iptables stop'	# service iptables stop, iptable 을 공개하도록 하는 명령
+	alias mr='rm -rf /home/hadoop/hdfs/mapred/*'
+	alias tr='rm -rf /home/hadoop/hdfs/temp/*'
+
+soruce ~/.bashrc
+-----
+<하둡 실행>
+sf 
+ls
+tar xzvfp (하둡 zipfile)
+mv (hadoop-1.0.4) /usr/local
+
+loc
+ls
+ln -s (hadoop...) hadoop
+ls -lsrt
+cd hadoop
+ls
+cd bin
+ls
+
+loc
+vi /etc/profile
+	export HADOOP_HOME=/usr/local/hadoop
+	export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$PATH
+	* 위치 바꾸기: JAVA_HOME -> HADOOP_HOME -> PATH
+source /etc/profile
+hadoop
+hadoop -version
+
+cd hadoop
+ls
+cd conf
+vi core-site.xml 
+  아래의...부분에 다음과 같이 입력하기
+  <configuration> ... </configuration>
+ 
+	<property> 
+                <name>fs.default.name</name>
+                <value>hdfs://NameNode:9000</value>
+        </property>
+	<property>
+                <name>hadoop.tmp.dir</name>
+                <value>/home/hadoop/hdfs/temp</value>
+        </property>
+vi hadoop-env.sh
+	export JAVA_HOME=/usr/local/java
+vi hdfs-site.xml
+	마찬가지로 <configuration> .. </configuration> ...부분에 다음 입력
+        <property>
+                <name>dfs.replication</name>
+                <value>1</value>
+        </property>
+        <property>
+                <name>dfs.http.address</name>
+                <value>Namenode:50070</value>
+        </property>
+        <property>
+                <name>dfs.secondary.http.address</name>
+                <value>SNamenode:50090</value>
+        </property>
+vi mapred-site.xml
+	마찬가지로 <configuration> .. </configuration> ...부분에 다음 입력
+        <property>
+                <name>mapred.job.tracker</name>
+                <value>NameNode:9001</value>
+        </property>
+        <property>
+                <name>mapred.local.dir</name>
+                <value>/home/hadoop/hdfs/mapred</value>
+        </property>
+        <property>
+                <name>mapred.system.dir</name>
+                <value>/home/hadoop/hdfs/mapred</value>
+        </property>
+vi masters
+	localhost라고 쓰인것 지우고 
+	snamenode 로 바꿈
+vi slaves
+	위의 masters변형 과정과 같음
+	snamenode
+------
+<다시 hadoop을 zip파일화함>
+loc
+ls
+tar czvfp hadoop.tar.gz (./hadoop-1.0.4)
+
+ips 	# 혹시 ip주소가 바뀌었을 때를 대비해 미리 해준다.
+scp -rp hadoop.tar.gz snamenode:/usr/local
+
+snamenode로 이동해서
+ls	# 위에서 namenode에서 scp -rp를 통해 보내진 하둡zip확인
+tar xzvfp (하둡 집파일)
+ln -s (hadoop-1.0.4) hadoop
+
+다시 namenode에서
+hadoop namenode format  #하둡을 namenode에서 실행한다
+start-all.sh 
+	(이걸로 하면 namenode와 snamenode 둘다 실행하므로 
+	만일 yes/no를 물어본다면 아마도 snamenode connection 때문일 것. yes로 선택)
+
+snamenode로 가서
+jps 	# snamenode에서는 TaskTracker, DataNode, Jps, SecondaryNameNode로 총 4 줄이 리턴되야 한다.	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

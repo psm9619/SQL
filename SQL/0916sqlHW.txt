@@ -1,0 +1,167 @@
+--2
+desc emp;
+desc dept;
+select emp.empno, ename, dept.dname
+from emp, dept
+where emp.deptno = dept.deptno;
+--4
+select empno, ename, dept.dname FROM emp JOIN dept using(deptno);
+--6.
+select ename, loc from emp, dept 
+    WHERE emp.deptno=dept.deptno AND loc = 'NEW YORK'; 
+--8.
+select ename, loc from emp 
+    JOIN dept USING(deptno) WHERE loc='NEW YORK';
+--10.
+select empno, ename, loc from emp
+    JOIN dept using(deptno) WHERE loc='NEW YORK' order by 1;
+--12.
+select ename, dname, loc from emp
+    JOIN dept using(Deptno) where ename = 'ADAMS';
+--14.
+select ename, dname, loc from emp 
+    NATURAL JOIN dept where ename = 'ADAMS';
+--16.
+select empno, ename, dname, sal from emp, dept
+    WHERE emp.deptno = dept.deptno AND sal BETWEEN 1000 and 2000
+    Order by 1;
+select empno, ename, dname, sal from emp 
+    NATURAL JOIN dept WHERE sal between 1000 and 2000
+    order by 1;
+select empno, ename, dname, sal from emp
+    JOIN dept USING(deptno) WHERE sal between 1000 and 2000
+    order by 1;
+select empno, ename, dname, sal from emp 
+    JOIN dept ON emp.deptno = dept.deptno WHERE sal between 1000 and 2000 
+    order by 1;
+--18.
+select empno, ename, loc from emp, dept 
+    WHERE emp.deptno=dept.deptno AND loc IN ('NEW YORK', 'DALLAS') 
+    order by 1;
+--20.
+select empno, ename, loc from emp 
+    NATURAL JOIN dept WHERE loc IN ('NEW YORK', 'DALLAS')
+    order by 1;
+--22.
+select empno, ename, sal, grade from emp, salgrade
+    WHERE sal BETWEEN losal and hisal
+    order by 4, 1;
+--24.
+select a.empno, a.ename, b.empno, b.ename from emp a join emp b on a.mgr= b.empno;
+--26.
+select b.ename, b.sal from emp a, emp b 
+    WHERE b.sal > a.sal and a.ename = 'BLAKE';
+--28.
+select empno from emp WHERE sal =  (select sal from emp where ename = 'FORD');
+--30.
+select b.empno, b.ename, count(*) from emp a JOIN emp b
+    ON a.mgr = b.empno GROUP BY b.empno, b.ename, a.mgr
+    Order by 3 desc;
+--32.
+select * from emp WHERE sal > (select sal from emp where ename = 'SCOTT');
+--34.
+select * from emp where deptno <> 20 AND job in (select job from emp where deptno = 20);
+--36.
+select * from emp where sal > all(select avg(sal) from emp group by deptno);
+--38.
+select * from emp where deptno = (select deptno from dept where loc='CHICAGO');
+
+---------------
+---------------
+select * from student; 
+select * from enrol; 
+select * from dept;
+select * from subject;
+
+desc student; 
+desc enrol; 
+desc subject;
+desc dept;
+
+--2.
+select student.stu_no, stu_name, sub_name, enr_grade 
+    from student, subject, enrol
+    where student.stu_no = enrol.stu_no
+    and enrol.sub_no = subject.sub_no;
+--4.
+select sub_name, stu_no, enr_grade from subject
+    join enrol on subject.sub_no = enrol.sub_no;
+--6.
+select unique(stu_name) from student join enrol using(STU_NO) where enr_grade >= 60;
+--8. (??)
+select stu_name, sub_name, sub_prof 
+    from student, subject, enrol
+    where student.stu_no = enrol.stu_no
+    and enrol.sub_no = subject.sub_no
+    and stu_name = '김인중';
+--10. (??)
+select sub_name, sub_prof from subject join enrol
+    using(sub_no) where stu_no = (select stu_no from student where stu_name = '김인중');
+--12.
+select * from enrol;
+select * from subject;
+select student.stu_no, stu_name 
+    from student, subject, enrol
+    where student.stu_no = enrol.stu_no
+    and enrol.sub_no = subject.sub_no
+    and sub_name = '컴퓨터개론';
+--14.
+select student.stu_no, stu_name, sub_grade, sub_dept
+    from student, subject, enrol
+    where student.stu_no = enrol.stu_no
+    and enrol.sub_no = subject.sub_no
+    and (sub_grade = 1 or sub_dept='컴퓨터정보');
+    
+select stu_no, stu_name from student natural join enrol
+    where sub_no in (select sub_no from subject 
+                     where sub_grade =1 or sub_dept = '컴퓨터정보');
+--16
+select stu_no from enrol join subject using(sub_no) 
+    where sub_prof in ('김태영', '김유석');
+--18.
+select sub_name from subject natural join enrol
+    where stu_no = (select stu_no from student where stu_name = '옥한빛');
+--20.
+select sub_name from subject natural join enrol
+    where stu_no in (select stu_no from student where stu_weight > 60);
+--22.
+select count(*) from student natural join enrol
+    where enr_grade >= 70;
+--24.
+select stu_no, stu_name, enr_grade from student natural join enrol
+    where enr_grade > (select avg(enr_grade) from enrol natural join student 
+                       where stu_name = '김종헌');
+--26.
+--select avg(enr_grade) from enrol;
+select student.stu_no, stu_name, sub_name, enr_grade from student, enrol, subject
+    where student.stu_no = enrol.stu_no
+    and enrol.sub_no = subject.sub_no
+    and enr_grade > (select avg(enr_grade) from enrol);
+--28.
+select * from enrol;
+select sub_dept, max(enr_grade) from enrol natural join subject
+    group by sub_dept 
+    having max(enr_grade)>
+        (select max(enr_grade) from enrol natural join subject  
+           group by sub_dept having sub_dept='기계');
+--30.
+select stu_no, stu_name, enr_grade from student natural join enrol
+    where sub_no in (select sub_no from subject where sub_name = '시스템분석설계')
+    order by 3;
+--32. (답안 참고)
+SELECT a.stu_dept, a.stu_no, a.stu_name, COUNT(b.sub_no)
+    FROM student a, enrol b
+    WHERE a.stu_no = b.stu_no
+    group by a.stu_dept, a.stu_no, a.stu_name
+    having count(b.sub_no) = 1
+    order by a.stu_dept, a.stu_no; 
+--34. (답안 참고)
+SELECT * from subject;
+select * from enrol;
+select sub_no from subject 
+   where sub_name in ('컴퓨터개론', '시스템분석설계');
+select student.stu_no, stu_name from student, subject, enrol
+    where student.stu_no = enrol.stu_no
+    and enrol.sub_no = subject.sub_no
+    and sub_name in ('컴퓨터개론, 시스템분석설계') order by stu_no;
+

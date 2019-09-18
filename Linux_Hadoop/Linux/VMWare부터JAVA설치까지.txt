@@ -1,0 +1,52 @@
+<Temp 공유폴더>
+윈도우 바탕화면에 Temp폴더 생성
+우클릭, 속성 -> 공유 탭-> 공유->Everyone 추가, 확인->고급공유->공유이름 Temp, 확인
+(??아마도)
+- 이 폴더에 앞으로 Oracle, VMWare, Centos, Hadoop, Hive, JDK등을 다운받아놓을것
+- 공유되었으므로 해당 컴퓨터에서 사용되는 Virtual server들도 접속할 수 있게 된 것
+
+<VM Ware>
+Temp에 있는 VMWare.exe실행(실행하는 도중에 key입력하라고 할 경우 폴더 내의 txt파일에서 가져온다)
+
+<Centos>
+
+<Node - namenode, snamenode 서버를 두 개 만들었음>
+**필요 데이터들이 들어있는 
+각각의 서버 창에서
+VM 탭 -> settings -> options -> shared folders
+Folders에서 Add.. -> 바탕화면에 만들어놓은 Temp 폴더 선택 
+Ok 
+
+**서버 접속**
+su
+(password 입력)
+
+**단축키 설정**
+vi ~/.bashrc
+	alias cls='clear'
+	alias sf='cd /mnt/hgfs/Temp'
+	alias loc='cd /usr/local'
+	(esc 키 -> shift키+; ->)wq!
+source ~/.bashrc   ## vi를 통해 바꾼 설정을 저장하는 과정
+
+
+**위치 이동 및 JAVA**
+sf    		   ## 위에서 설정한 위치로 이동
+ls 		   ## jdk zip파일이 뜰 것
+tar xzvfp (jdk-131어쩌고저쩌고)	## jdk zip파일 이름을 위에서 복사해오기
+
+ls 		   ## jdk 풀린 것 뜰 것
+mv (위에서 jdk가져오기) /usr/local	## jdk를 usr/local 폴더로 옮기는 과정
+loc		   ## /usr/local로 이동
+ls		   ## 앞서 이동된 jdk 확인
+ln -s (jdk이름) java  
+
+**JAVA 환경변수 및 path설정**
+vi /etc/profile	   ## vi로 들어가면 나오는 #으로 시작하는 multiple line들이 있는데 이 문단(?)과 pathmung() {}함수 사이의 빈 공간에 다음 코맨드를 입력한다.  
+	export JAVA_HOME=/usr/local/java
+	export PATH=$JAVA_HOME/bin:$PATH
+(esc -> shit+; ->)wq
+source /etc/profile 
+java		   ## JAVA 실행 확인
+java -version	   ## version 확인
+

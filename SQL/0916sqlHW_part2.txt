@@ -1,0 +1,59 @@
+create table emp1
+    as select * from emp where deptno in (20,30);
+create table dept1
+    as select * from dept;
+create table salgrade1 
+    as select * from salgrade;
+
+--2.
+insert into emp1(empno, ename, sal, deptno) 
+        values (7401, 'HOMER', 1300, 10);
+--4.
+insert into emp1 select * from emp where deptno=10;
+--6.
+update emp1 set sal=sal - sal*0.1 where deptno=20;
+select * from emp1;
+--8.
+update emp1 set mgr=7654, deptno=30 where empno = 7902;
+--10.
+update emp1 set sal = sal-20 where empno in (select empno
+    from emp1, salgrade where sal >= losal and sal <= hisal and grade = 2);
+--12.
+insert into dept1 values ('50', 'PLANNING', 'MIAMI');
+--14.
+delete from dept1 where deptno= '30';
+--16.
+delete from emp1 where deptno='99';
+--18.
+update emp1 set deptno='30' where ename in ('JOSH', 'JONES', 'CLARK');
+--20.
+drop table emp1;
+------------------
+------------------
+create table student1 as select * from student where stu_Grade in (1,2);
+create table subject1 as select * from subject;
+create table enrol1 as select * from enrol;
+
+--2.
+insert into student1(stu_no, stu_name, stu_dept, stu_grade, stu_class, stu_gender)
+    values (20202038, '남지선', '전기전자', 1, 'C', 'F');
+--4.
+insert into student1 select * from student where stu_grade = 3;
+--6.
+select * from student;
+update student1 set stu_height = stu_height+2
+    where stu_no = 20131025;
+--10.
+update enrol1 set enr_grade = 0 where stu_no = 20151062;
+--12.
+select * from subject1;
+insert into subject1 values (112, '자동화시스템', '고종민', 3, '기계');
+--14.
+delete from subject1 where sub_no = 101;
+--16.
+update enrol1 set stu_no = 9999999  
+    where stu_no not in (select stu_no from student1);
+--18.
+delete from enrol1 where stu_no =  9999999 ;
+--20.
+drop table enrol1;
