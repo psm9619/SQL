@@ -1,0 +1,39 @@
+
+vi /etc/profile
+	export HIVE_HOME=/usr/local/hive
+	export HADOOP_HOME_WARM_SUPPRESS=TRUE
+	path 수정
+source /etc/profile
+
+cd (데이터 폴더)
+hive
+show tables;
+
+create table (테이블이름)(
+	항목 데이터 타입,
+	항목2 데이터타입2,.
+	(ex. Year INT,
+	     Month Int,...)
+	...)
+partitioned by ( (테이블_구분에_사용할_항목이름) 데이터타입)
+row format delimted
+	fields terminated by ','
+	lines terminated by '\n'
+	store as textfile ; <-여기에 있는 ;이 앞의 3개 코맨드를 묶어서 실행
+
+
+load data local inpath '(파일이름).csv'
+overwrite into table (테이블이름)
+partition(구분항목이름=구분값) ;
+
+***************
+<SQL언어로 데이터를 가공, 분석하면서 지정된 사용자 폴더로 결과값을 보내게 하는 것.>
+
+insert overwrite directory '/user/hive/psm9619'
+select flightnum, max(arrdelay) maxd
+from airdelay
+group by flightnum order by maxd desc
+
+이제 나가서 loc 에서 
+hadoop fs -lrt /  <- 방금 한 hive 작업이 목표 폴더에 잘 저장되었는지 확인
+폴더에서 wordpad등으로 열어서, 중간에 칼럼구분값으로 들어가 있는 'r'을 ','로 모두 바꾸기

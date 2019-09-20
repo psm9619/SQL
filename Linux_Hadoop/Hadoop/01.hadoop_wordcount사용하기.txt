@@ -1,0 +1,25 @@
+loc
+jps
+hadoop fs -ls /	  # hadoop 폴더 내의 것들 ls
+hadoop fs -lsr /  # 시간까지 더 자세하게 ls
+cd hadoop
+hadoop fs -mkdir input
+hadoop fs -lsr /   # 위에서 만든 input 폴더 확인
+hadoop fs -put CHANGES.txt /user/root/input   # changes라고 하는 txt파일을 input 폴더로 옮김
+hadoop jar hadoop-examples-1.0.4.jar wordcount /user/root/input/CHANGES.txt output  #hadoop-examples-1.0.4.jar 은 hadoop 내의 자바 실행jar 파일. 이 안에 있는 기능 중 하나가 wordcount인데, 다음과 같은 코맨드를 통해 exmples...jar내의 wordcount를 /user/.../input/CHANGES.txt파일에 적용하여 output 파일에 넣어라 라는 명령이다.
+hadoop fs -lsr /
+hadoop fs -cat (/user/root/output/part-r-00000)>>/mnt/hgfs/Temp/test
+sf
+ls -lrt
+
+
+
+/user/root/input
+/mnt/hgfs/Temp/hws/sampletxt
+
+
+
+
+
+
+
