@@ -30,10 +30,12 @@ partition(구분항목이름=구분값) ;
 <SQL언어로 데이터를 가공, 분석하면서 지정된 사용자 폴더로 결과값을 보내게 하는 것.>
 
 insert overwrite directory '/user/hive/psm9619'
-select flightnum, max(arrdelay) maxd
-from airdelay
-group by flightnum order by maxd desc
+select ....
+from ...
+...
 
-이제 나가서 loc 에서 
-hadoop fs -lrt /  <- 방금 한 hive 작업이 목표 폴더에 잘 저장되었는지 확인
+이제 나가서 
+hadoop fs -lsr /  <- 방금 한 hive 작업이 목표 폴더에 잘 저장되었는지 확인
+hadoop cat (hive 작업 저장 주소) >> /mnt/hgfs/Temp/..이하 목표 폴더
+
 폴더에서 wordpad등으로 열어서, 중간에 칼럼구분값으로 들어가 있는 'r'을 ','로 모두 바꾸기
